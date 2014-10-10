@@ -7,7 +7,7 @@ from django.db.models import Q
 class RoomQuerySet(QuerySet):
 
     def for_user(self, user):
-        if user.is_superuser:
+        if user.is_staff:
             return self
         try:
             q = Q(owner=user) | Q(is_public=True)
@@ -19,7 +19,7 @@ class RoomQuerySet(QuerySet):
 class DownloadQuerySet(QuerySet):
 
     def for_user(self, user):
-        if user.is_superuser:
+        if user.is_staff:
             return self
         try:
             q = Q(room_owner=user) | Q(room__is_public=True)

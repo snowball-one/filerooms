@@ -86,5 +86,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 SENDFILE_ROOT = os.path.join(BASE_DIR, 'protected')
-SENDFILE_BACKEND = 'sendfile.backends.simple'
+SENDFILE_BACKEND = 'sendfile.backends.development'
 SENDFILE_URL = '/protected'
