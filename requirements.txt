@@ -1,0 +1,4 @@
+# Development requirements
+
+django-extensions==1.4.0
+ipython==2.3.0

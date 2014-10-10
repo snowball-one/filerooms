@@ -1,0 +1,15 @@
+{% extends 'filerooms/base.html' %}
+{% load i18n %}
+
+{% block heading %}
+    {% trans 'delete' %} {{ download.name }}
+{% endblock heading %}
+
+{% block content %}
+    <p>{% trans 'Are you sure you want to delete' %} "{{ download.name }}"</p>
+    <form method="post" action=".">
+        {% csrf_token %}
+        <a href="{% url 'filerooms:room-detail' room.slug %}">{% trans 'cancel' %}</a>
+        <input type="submit" value="{% trans 'confirm'%}"  />
+    </form>
+{% endblock %}

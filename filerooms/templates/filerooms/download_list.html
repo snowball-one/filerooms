@@ -1,0 +1,40 @@
+{% extends 'filerooms/base.html' %}
+{% load i18n %}
+
+{% block heading %}
+    {{ room.name }}
+{% endblock heading %}
+
+{% block content %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans 'file name' %}</th>
+                <th>{% trans 'description' %}</th>
+                <th>{% trans 'size' %}</th>
+                <th></th>
+            </th>
+        </thead>
+        <tbody>
+        {% for download in downloads %}
+            <tr>
+                <td> {{ download.name }} </td>
+                <td> {{ download.description }} </td>
+                <td> {{ download.size|filesizeformat }} </td>
+                <td>
+                    <a href="{{ download.get_absolute_url }}">{% trans 'download' %}</a>
+                    {% if user.is_staff %}
+                        - <a href="{% url 'filerooms:download-delete' room.slug download.pk %}">{% trans 'delete' %}</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}
+{% block controls %}
+{% if user.is_staff %}
+    <a href="{% url 'filerooms:download-create' room.slug %}">Upload a new file</a>
+{% endif %}
+{% endblock controls %}

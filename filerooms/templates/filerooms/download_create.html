@@ -1,0 +1,15 @@
+{% extends 'filerooms/base.html' %}
+{% load i18n %}
+
+{% block heading %}
+    {% trans 'create a new download in' %} {{ room.name }}
+{% endblock heading %}
+
+{% block content %}
+    <form method="post" action="." enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <a href="{% url 'filerooms:room-list' %}">{% trans 'cancel' %}</a>
+        <input type="submit" value="{% trans 'confirm'%}"  />
+    </form>
+{% endblock %}

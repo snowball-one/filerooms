@@ -1,0 +1,36 @@
+{% extends 'filerooms/base.html' %}
+{% load i18n %}
+
+{% block heading %}
+    {% trans 'file rooms' %}
+{% endblock heading %}
+
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans 'name' %}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for room in rooms %}
+            <tr>
+                <td>{{ room.name }}</td>
+                <td>
+                    <a href="{{ room.get_absolute_url }}">{% trans 'open' %}</a>
+                    {% if user.is_staff %}
+                         - <a href="{% url  'filerooms:room-delete' room.slug %}">delete</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}
+
+{% block controls %}
+{% if user.is_staff %}
+    <a href="{% url 'filerooms:room-create' %}">{% trans 'create a new file room' %}</a>
+{% endif %}
+{% endblock controls %}

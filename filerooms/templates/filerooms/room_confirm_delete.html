@@ -1,0 +1,17 @@
+{% extends 'filerooms/base.html' %}
+{% load i18n %}
+
+{% block heading %}
+    {% trans 'delete' %} {{ room.name }}
+{% endblock heading %}
+
+{% block content %}
+    <p>
+        {% blocktrans %}Are you sure you want to delete "{{ room.name }}" and all it's contents?{% endblocktrans %}
+    </p>
+    <form method="post" action=".">
+        {% csrf_token %}
+        <a href="{% url 'filerooms:room-list' %}">{% trans 'cancel' %}</a>
+        <input type="submit" value="{% trans 'confirm'%}"  />
+    </form>
+{% endblock %}
