@@ -23,7 +23,7 @@ You will then need to add the following to you settings file::
 
 The ``SENDFILE_*`` settings are described in the `django-sendfile`_ package
 
-You will also need to add the ``fileroom`` urls to your top level ``urls.py``::
+You will also need to add the ``filerooms`` urls to your top level ``urls.py``::
 
     urlpatterns = [
         # your existing patterns
