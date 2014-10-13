@@ -24,7 +24,7 @@
                 <td> {{ download.size|filesizeformat }} </td>
                 <td>
                     <a href="{{ download.get_absolute_url }}">{% trans 'download' %}</a>
-                    {% if user.is_staff %}
+                    {% if user.is_staff or user.is_superuser %}
                         - <a href="{% url 'filerooms:download-delete' room.slug download.pk %}">{% trans 'delete' %}</a>
                     {% endif %}
                 </td>
@@ -34,7 +34,7 @@
     </table>
 {% endblock content %}
 {% block controls %}
-{% if user.is_staff %}
+{% if user.is_staff or user.is_superuser %}
     <a href="{% url 'filerooms:download-create' room.slug %}">Upload a new file</a>
 {% endif %}
 {% endblock controls %}

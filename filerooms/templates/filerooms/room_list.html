@@ -19,7 +19,7 @@
                 <td>{{ room.name }}</td>
                 <td>
                     <a href="{{ room.get_absolute_url }}">{% trans 'open' %}</a>
-                    {% if user.is_staff %}
+                    {% if user.is_staff or user.is_superuser %}
                          - <a href="{% url  'filerooms:room-delete' room.slug %}">delete</a>
                     {% endif %}
                 </td>
@@ -30,7 +30,7 @@
 {% endblock content %}
 
 {% block controls %}
-{% if user.is_staff %}
+{% if user.is_staff or user.is_superuser %}
     <a href="{% url 'filerooms:room-create' %}">{% trans 'create a new file room' %}</a>
 {% endif %}
 {% endblock controls %}

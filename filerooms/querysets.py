@@ -7,10 +7,10 @@ from django.db.models import Q
 class RoomQuerySet(QuerySet):
 
     def for_user(self, user):
-        if user.is_staff:
+        if user.is_staff or user.is_superuser:
             return self
         try:
-            q = Q(owner=user) | Q(is_public=True)
+            q = Q(owners=user) | Q(is_public=True)
             return self.filter(q)
         except AttributeError:
             return self.none()
@@ -19,10 +19,10 @@ class RoomQuerySet(QuerySet):
 class DownloadQuerySet(QuerySet):
 
     def for_user(self, user):
-        if user.is_staff:
+        if user.is_staff or user.is_superuser:
             return self
         try:
-            q = Q(room_owner=user) | Q(room__is_public=True)
+            q = Q(room__owners=user) | Q(room__is_public=True)
             return self.filter(q)
         except AttributeError:
             return self.none()

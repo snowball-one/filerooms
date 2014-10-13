@@ -7,7 +7,6 @@ from django.db.models import get_model
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
-from django.http import HttpResponseRedirect
 
 from braces import views
 from sendfile import sendfile
@@ -19,23 +18,38 @@ Room = get_model('filerooms', 'Room')
 Download = get_model('filerooms', 'Download')
 
 
-class RoomListView(views.StaffuserRequiredMixin, generic.ListView):
+class CanAdministrateMixin(views.UserPassesTestMixin):
+
+    def test_func(self, user):
+        if user.is_superuser or user.is_staff:
+            return True
+        return False
+
+
+class UserRoomMixin(object):
+
     model = Room
+
+    def get_queryset(self):
+        qs = super(UserRoomMixin, self).get_queryset()
+        return qs.for_user(user=self.request.user)
+
+
+class RoomListView(UserRoomMixin, views.LoginRequiredMixin,
+                   generic.ListView):
     template_name = 'filerooms/room_list.html'
     context_object_name = 'rooms'
     paginate_by = 10
 
 
-class RoomCreateView(views.StaffuserRequiredMixin, generic.CreateView):
-    model = Room
+class RoomCreateView(UserRoomMixin, CanAdministrateMixin, generic.CreateView):
     template_name = 'filerooms/room_create.html'
     context_object_name = 'room'
     form_class = RoomForm
     success_url = reverse_lazy('filerooms:room-list')
 
 
-class RoomDeleteView(views.StaffuserRequiredMixin, generic.DeleteView):
-    model = Room
+class RoomDeleteView(UserRoomMixin, CanAdministrateMixin, generic.DeleteView):
     template_name = 'filerooms/room_confirm_delete.html'
     context_object_name = 'room'
     success_url = reverse_lazy("filerooms:room-list")
@@ -85,7 +99,7 @@ class DownloadFileView(UserDownloadsMixin,
                         attachment=True)
 
 
-class DownloadCreateView(GetRoomMixin, views.StaffuserRequiredMixin,
+class DownloadCreateView(GetRoomMixin, CanAdministrateMixin,
                          generic.CreateView):
     model = Download
     template_name = 'filerooms/download_create.html'
@@ -101,7 +115,7 @@ class DownloadCreateView(GetRoomMixin, views.StaffuserRequiredMixin,
         return kwargs
 
 
-class DownloadDeleteView(GetRoomMixin, views.StaffuserRequiredMixin,
+class DownloadDeleteView(GetRoomMixin, CanAdministrateMixin,
                          generic.DeleteView):
     model = Download
     template_name = 'filerooms/download_confirm_delete.html'

@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from . import querysets
 from .utils import protected_storage
+from .fields import CustomStorageFileField
 
 
 class AbstractRoom(models.Model):
@@ -47,8 +48,9 @@ class AbstractDownload(models.Model):
     room = models.ForeignKey('filerooms.Room', related_name='downloads',
                              verbose_name=_("file room"))
     description = models.TextField(_("description"))
-    attachment = models.FileField(_("attachment"), storage=protected_storage,
-                                  upload_to='files/%Y%m')
+    attachment = CustomStorageFileField(_("attachment"),
+                                        storage=protected_storage,
+                                        upload_to='files/%Y%m')
     created = models.DateTimeField(_("created date"), null=True, blank=True)
 
     objects = querysets.DownloadQuerySet.as_manager()
@@ -62,12 +64,14 @@ class AbstractDownload(models.Model):
         return super(AbstractDownload, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        path = self.attachment.path
+        if self.attachment:
+            path = self.attachment.path
         super(AbstractDownload, self).delete(*args, **kwargs)
-        protected_storage.delete(path)
+        if self.attachment and path:
+            protected_storage.delete(path)
 
     def __unicode__(self):
-        return "{0} uploaded at {1}".format(self.name, self.created)
+        return "{0} - {1}".format(self.room.name, self.name)
 
     # Helpers functions for easy usage in templates
 
