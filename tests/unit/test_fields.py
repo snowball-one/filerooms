@@ -2,7 +2,7 @@
 from filerooms import fields
 
 
-def test_custom_file_field_omits_storage_for_deconstruct():
-    field = fields.CustomStorageFileField(("a_field"), storage={})
+def test_protected_file_field_omits_storage_for_deconstruct():
+    field = fields.ProtectedStorageFileField(("a_field"))
     name, path, args, kwargs = field.deconstruct()
     assert 'storage' not in kwargs

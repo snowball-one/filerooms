@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=128, verbose_name='file name')),
                 ('description', models.TextField(verbose_name='description')),
-                ('attachment', filerooms.fields.CustomStorageFileField(upload_to='files/%Y%m', verbose_name='attachment')),
+                ('attachment', filerooms.fields.ProtectedStorageFileField(upload_to='')),
                 ('created', models.DateTimeField(null=True, verbose_name='created date', blank=True)),
             ],
             options={

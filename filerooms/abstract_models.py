@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from . import querysets
 from .utils import protected_storage
-from .fields import CustomStorageFileField
+from .fields import ProtectedStorageFileField
 
 
 class AbstractRoom(models.Model):
@@ -48,8 +48,7 @@ class AbstractDownload(models.Model):
     room = models.ForeignKey('filerooms.Room', related_name='downloads',
                              verbose_name=_("file room"))
     description = models.TextField(_("description"))
-    attachment = CustomStorageFileField(_("attachment"),
-                                        storage=protected_storage,
+    attachment = ProtectedStorageFileField(_("attachment"),
                                         upload_to='files/%Y%m')
     created = models.DateTimeField(_("created date"), null=True, blank=True)
 
